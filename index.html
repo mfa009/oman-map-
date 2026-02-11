@@ -7,22 +7,36 @@
 
 <style>
 body {
+    margin: 0;
     font-family: Arial, sans-serif;
-    margin: 0;
-    background: #f4f6f9;
-    text-align: center;
     direction: rtl;
+    background: #f2f2f2;
 }
 
-h1 {
-    background: #00695c;
+header {
+    background: #004d40;
     color: white;
+    text-align: center;
     padding: 15px;
-    margin: 0;
 }
 
-.map-container {
-    margin-top: 20px;
+.container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.map {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+    padding: 20px;
+}
+
+.info {
+    flex: 1;
+    min-width: 300px;
+    padding: 20px;
+    background: white;
 }
 
 svg path {
@@ -34,83 +48,132 @@ svg path {
 }
 
 svg path:hover {
-    fill: #004d40;
+    fill: #00796b;
 }
 
-#infoBox {
-    margin: 20px auto;
-    padding: 15px;
-    width: 90%;
-    max-width: 500px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    display: none;
+h2 {
+    color: #004d40;
 }
 
-#infoBox img {
-    width: 100%;
-    border-radius: 8px;
-    margin-top: 10px;
+ul {
+    line-height: 1.8;
 }
 </style>
 </head>
 
 <body>
 
-<h1>خريطة سلطنة عمان - المواقع الأثرية</h1>
+<header>
+    <h1>أبرز المواقع الأثرية في محافظات سلطنة عمان</h1>
+</header>
 
-<div class="map-container">
+<div class="container">
 
-<!-- خريطة مبسطة (تجريبية) -->
-<svg width="300" height="300" viewBox="0 0 300 300">
+<div class="map">
 
-    <!-- مسقط -->
-    <path d="M180 60 L240 60 L230 110 L170 110 Z"
-          onclick="showWilaya('muscat')" />
+<!-- خريطة مبسطة تعليمية -->
+<svg width="350" height="500" viewBox="0 0 350 500">
 
-    <!-- نزوى -->
-    <path d="M100 140 L170 140 L160 200 L90 200 Z"
-          onclick="showWilaya('nizwa')" />
+<!-- مسندم -->
+<path d="M150 20 L200 20 L190 70 L140 70 Z"
+onclick="showInfo('musandam')" />
+
+<!-- شمال الباطنة -->
+<path d="M120 100 L200 100 L190 150 L110 150 Z"
+onclick="showInfo('batinah')" />
+
+<!-- الداخلية -->
+<path d="M100 200 L220 200 L200 300 L80 300 Z"
+onclick="showInfo('dakhiliyah')" />
+
+<!-- الشرقية -->
+<path d="M220 200 L320 220 L300 350 L200 300 Z"
+onclick="showInfo('sharqiyah')" />
+
+<!-- ظفار -->
+<path d="M40 350 L200 350 L180 480 L20 480 Z"
+onclick="showInfo('dhofar')" />
 
 </svg>
 
+<p>اضغط على المحافظة لعرض أهم مواقعها الأثرية</p>
+
 </div>
 
-<div id="infoBox"></div>
+<div class="info" id="infoBox">
+    <h2>اختر محافظة</h2>
+    <p>اضغط على أي محافظة في الخريطة لعرض المواقع.</p>
+</div>
+
+</div>
 
 <script>
 
-const data = {
-    muscat: {
-        name: "مسقط",
-        site: "قلعة الجلالي",
-        description: "تعد من أهم القلاع التاريخية في سلطنة عمان وتقع في محافظة مسقط.",
-        image: "https://upload.wikimedia.org/wikipedia/commons/5/5d/Al_Jalali_Fort%2C_Muscat.jpg"
-    },
-    nizwa: {
-        name: "نزوى",
-        site: "قلعة نزوى",
-        description: "من أبرز المعالم التاريخية في ولاية نزوى وتتميز ببرجها الدائري الكبير.",
-        image: "https://upload.wikimedia.org/wikipedia/commons/3/36/Nizwa_Fort_Oman.jpg"
-    }
+const locations = {
+
+musandam: {
+    name: "محافظة مسندم",
+    sites: [
+        "خور نجد",
+        "خصب",
+        "جزيرة سلامة وبناتها"
+    ]
+},
+
+batinah: {
+    name: "محافظة شمال الباطنة",
+    sites: [
+        "حصن الحزم",
+        "قلعة صحار",
+        "موقع وادي الجزي"
+    ]
+},
+
+dakhiliyah: {
+    name: "محافظة الداخلية",
+    sites: [
+        "قلعة نزوى",
+        "بهلاء",
+        "الجبل الأخضر"
+    ]
+},
+
+sharqiyah: {
+    name: "محافظة الشرقية",
+    sites: [
+        "رمال وهيبة",
+        "وادي بني خالد",
+        "رأس الحد"
+    ]
+},
+
+dhofar: {
+    name: "محافظة ظفار",
+    sites: [
+        "مدينة سمهرم",
+        "شجرة اللبان",
+        "خور روري"
+    ]
+}
+
 };
 
-function showWilaya(key) {
-    const info = data[key];
-    const box = document.getElementById("infoBox");
+function showInfo(region) {
+    const info = locations[region];
 
-    box.innerHTML = `
-        <h2>${info.name}</h2>
-        <h3>${info.site}</h3>
-        <p>${info.description}</p>
-        <img src="${info.image}" alt="${info.site}">
-    `;
+    let content = `<h2>${info.name}</h2><ul>`;
 
-    box.style.display = "block";
+    info.sites.forEach(site => {
+        content += `<li>${site}</li>`;
+    });
+
+    content += "</ul>";
+
+    document.getElementById("infoBox").innerHTML = content;
 }
 
 </script>
 
 </body>
 </html>
+
